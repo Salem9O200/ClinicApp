@@ -16,6 +16,9 @@ public interface DoctorDao {
     @Query("SELECT * FROM doctors")
     List<Doctor> getAllDoctors();
 
+    @Query("SELECT * FROM doctors WHERE id = :id")
+    Doctor getDoctorById(int id);
+
     @Query("SELECT * FROM doctors WHERE specialty = :specialty")
     List<Doctor> getDoctorsBySpecialty(String specialty);
 }
