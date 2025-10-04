@@ -5,65 +5,58 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.clinicapp.Adapter.DoctorsPagerAdapter;
 import com.example.clinicapp.databinding.FragmentDoctorsBinding;
+import com.google.android.material.tabs.TabLayoutMediator;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DoctorsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DoctorsFragment extends Fragment {
 
-    FragmentDoctorsBinding binding;
+    private FragmentDoctorsBinding binding;
 
+    public DoctorsFragment() {}
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public DoctorsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DoctorsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DoctorsFragment newInstance(String param1, String param2) {
+    public static DoctorsFragment newInstance(String p1, String p2) {
         DoctorsFragment fragment = new DoctorsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("param1", p1);
+        args.putString("param2", p2);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentDoctorsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentDoctorsBinding.inflate(inflater,container,false);
-        // Inflate the layout for this fragment
-        return binding.getRoot();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        DoctorsPagerAdapter adapter = new DoctorsPagerAdapter(this);
+        binding.viewPager.setAdapter(adapter);
+
+        new TabLayoutMediator(binding.tabLayout, binding.viewPager,
+                (tab, position) -> {
+                    switch (position) {
+                        case 0: tab.setText("عام"); break;
+                        case 1: tab.setText("أسنان"); break;
+                        case 2: tab.setText("جلدية"); break;
+                        case 3: tab.setText("أطفال"); break;
+                    }
+                }).attach();
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

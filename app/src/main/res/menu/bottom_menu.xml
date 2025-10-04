@@ -1,19 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navDoctors"
+        android:id="@+id/nav_doctors"
         android:title="الأطباء"
-        android:icon="@drawable/ic_launcher_background" />
+        android:icon="@drawable/ic_doctor_general" />
     <item
-        android:id="@+id/navAppointments"
+        android:id="@+id/nav_appointments"
         android:title="المواعيد"
-        android:icon="@drawable/ic_launcher_background" />
+        android:icon="@drawable/appointment" />
     <item
-        android:id="@+id/navRecords"
+        android:id="@+id/nav_records"
         android:title="السجلات"
-        android:icon="@drawable/ic_launcher_background" />
+        android:icon="@drawable/record" />
     <item
-        android:id="@+id/navProfile"
-        android:title="الملف"
-        android:icon="@drawable/ic_launcher_background" />
+        android:id="@+id/nav_profile"
+        android:title="الملف الشخصي"
+        android:icon="@drawable/profile" />
 </menu>

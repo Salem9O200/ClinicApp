@@ -1,91 +1,98 @@
 package com.example.clinicapp;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.clinicapp.Database.DoctorDao;
 import com.example.clinicapp.Database.MyDataBase;
+import com.example.clinicapp.Database.SeedData;
 import com.example.clinicapp.Fragment.AppointmentsFragment;
+import com.example.clinicapp.Fragment.DentalDoctorsFragment;
+import com.example.clinicapp.Fragment.DermatologyDoctorsFragment;
 import com.example.clinicapp.Fragment.DoctorsFragment;
+import com.example.clinicapp.Fragment.GeneralDoctorsFragment;
+import com.example.clinicapp.Fragment.PediatricsDoctorsFragment;
 import com.example.clinicapp.Fragment.ProfileFragment;
 import com.example.clinicapp.Fragment.RecordsFragment;
 import com.example.clinicapp.Model.Doctor;
-import com.example.clinicapp.databinding.ActivityMainBinding;
+import com.example.clinicapp.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
 
-        SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
-        if (!prefs.getBoolean("isLoggedIn", false)) {
-            startActivity(new Intent(this, AuthActivity.class));
-            finish();
-            return;
-        }
+        SeedData.prepopulate(getApplicationContext());
 
-        insertSampleDoctors();
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new DoctorsFragment())
-                .commit();
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setOnItemSelectedListener(item -> {
+            Fragment f;
+            int id = item.getItemId();
 
-        binding.bottomNav.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-            if (item.getItemId() == R.id.navDoctors) {
-                selectedFragment = new DoctorsFragment();
-            } else if (item.getItemId() == R.id.navAppointments) {
-                selectedFragment = new AppointmentsFragment();
-            } else if (item.getItemId() == R.id.navRecords) {
-                selectedFragment = new RecordsFragment();
-            } else if (item.getItemId() == R.id.navProfile) {
-                selectedFragment = new ProfileFragment();
+            if (id == R.id.nav_doctors) {
+                f = new DoctorsFragment();
+            } else if (id == R.id.nav_appointments) {
+                f = new AppointmentsFragment();
+            } else if (id == R.id.nav_records) {
+                f = new RecordsFragment();
+            } else {
+                f = new ProfileFragment();
             }
 
-            if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainer, selectedFragment)
-                        .commit();
-            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainer, f)
+                    .commit();
             return true;
         });
-    }
-    private void insertSampleDoctors() {
-        SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
-        boolean doctorsInserted = prefs.getBoolean("doctors_inserted", false);
 
-        if (!doctorsInserted) {
-            new Thread(() -> {
-                MyDataBase db = MyDataBase.getDatabase(this);
-                DoctorDao doctorDao = db.doctorDao();
+        bottomNav.setSelectedItemId(R.id.nav_doctors);
 
-                // إدخال الأطباء التجريبيين
-                doctorDao.insert(new Doctor("د. أحمد محمد", "General", "doctor1", "09:00,10:00,11:00"));
-                doctorDao.insert(new Doctor("د. سارة خليل", "Dental", "doctor2", "10:00,11:00,12:00"));
-                doctorDao.insert(new Doctor("د. علي حسن", "Dermatology", "doctor3", "14:00,15:00,16:00"));
-                doctorDao.insert(new Doctor("د. ليلى عبد الله", "Pediatrics", "doctor4", "09:00,13:00,15:00"));
-
-                // تحديث SharedPreferences على الخيط الرئيسي
-                runOnUiThread(() -> {
-                    prefs.edit().putBoolean("doctors_inserted", true).apply();
-                });
-            }).start();
-        }
-    }
-    @SuppressLint("GestureBackNavigation")
-    @Override
-    public void onBackPressed() {
-        // يمكنك إضافة تأكيد الخروج هنا لاحقًا
-        super.onBackPressed();
     }
 
+    private void insertSampleDoctorsOnce() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            MyDataBase db = MyDataBase.getDatabase(getApplicationContext());
+            if (db.doctorDao().count() == 0) {
+                Doctor d1 = new Doctor();
+                d1.setName("د. أحمد محمد");
+                d1.setCategory("General");
+                d1.setImageUrl("doctor1");
+                d1.setSlotsCsv("09:00,10:00,11:00");
+                d1.setPhone("1234567891");
+                db.doctorDao().insert(d1);
+
+                Doctor d2 = new Doctor();
+                d2.setName("د. سارة خليل");
+                d2.setCategory("Dental");
+                d2.setImageUrl("doctor2");
+                d2.setSlotsCsv("10:00,11:00,12:00");
+                d2.setPhone("1234567891");
+                db.doctorDao().insert(d2);
+
+                Doctor d3 = new Doctor();
+                d3.setName("د. علي حسن");
+                d3.setCategory("Dermatology");
+                d3.setImageUrl("doctor3");
+                d3.setSlotsCsv("14:00,15:00,16:00");
+                d3.setPhone("1234567891");
+                db.doctorDao().insert(d3);
+
+                Doctor d4 = new Doctor();
+                d4.setName("د. ليلى عبد الله");
+                d4.setCategory("Pediatrics");
+                d4.setImageUrl("doctor4");
+                d4.setSlotsCsv("09:00,13:00,15:00");
+                d4.setPhone("1234567891");
+                db.doctorDao().insert(d4);
+            }
+        });
+    }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_general"
+        android:title="عام"
+        />
+
+    <item
+        android:id="@+id/nav_dental"
+        android:title="أسنان"
+        />
+
+    <item
+        android:id="@+id/nav_derma"
+        android:title="جلدية"
+ />
+
+    <item
+        android:id="@+id/nav_pediatrics"
+        android:title="أطفال"
+       />
+</menu>

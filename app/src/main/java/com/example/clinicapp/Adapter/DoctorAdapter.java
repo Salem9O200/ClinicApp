@@ -13,56 +13,64 @@ import com.bumptech.glide.Glide;
 import com.example.clinicapp.Model.Doctor;
 import com.example.clinicapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder> {
-    private List<Doctor> doctors; // ✅
-    private OnDoctorClickListener listener;
 
+    private final List<Doctor> doctors = new ArrayList<>();
+    private final OnDoctorClickListener listener;
+
+    // Interface لحدث الضغط
     public interface OnDoctorClickListener {
-        void onDoctorClick(Doctor doctor); // ✅
+        void onDoctorClick(Doctor doctor);
     }
 
-    public DoctorAdapter(List<Doctor> doctors, OnDoctorClickListener listener) { // ✅
-        this.doctors = doctors;
+    public DoctorAdapter(OnDoctorClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setDoctors(List<Doctor> list) {
+        doctors.clear();
+        if (list != null) doctors.addAll(list);
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_doctor, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Doctor doctor = doctors.get(position); // ✅
-        holder.tvName.setText(doctor.getName());
-        holder.tvSpecialty.setText(getSpecialtyArabic(doctor.getSpecialty()));
-        holder.tvSlots.setText("المواعيد: " + doctor.getAvailableSlots());
+        Doctor d = doctors.get(position);
+
+        holder.tvName.setText(d.getName());
+        holder.tvCategory.setText(getCategoryArabic(d.getCategory()));
+        holder.tvSlots.setText("المواعيد: " + (d.getSlotsCsv() == null ? "-" : d.getSlotsCsv()));
+        holder.tvPhone.setText("📞 " + (d.getPhone() == null ? "-" : d.getPhone()));
+
+        // تحميل صورة من drawable بالاسم (بدون الامتداد)
+        String drawableName = d.getImageUrl();
+        int resId = 0;
+        if (drawableName != null && !drawableName.trim().isEmpty()) {
+            resId = holder.itemView.getResources().getIdentifier(
+                    drawableName, "drawable", holder.itemView.getContext().getPackageName()
+            );
+        }
+        if (resId == 0) resId = R.drawable.ic_launcher_background;
 
         Glide.with(holder.ivDoctor.getContext())
-                .load(R.drawable.ic_launcher_background)
+                .load(resId)
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.ivDoctor);
 
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDoctorClick(doctor);
-            }
+            if (listener != null) listener.onDoctorClick(d);
         });
-    }
-
-    private String getSpecialtyArabic(String specialty) {
-        switch (specialty) {
-            case "General": return "طبيب عام";
-            case "Dental": return "طبيب أسنان";
-            case "Dermatology": return "أخصائي جلدية";
-            case "Pediatrics": return "طبيب أطفال";
-            default: return specialty;
-        }
     }
 
     @Override
@@ -70,16 +78,29 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
         return doctors.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivDoctor;
-        TextView tvName, tvSpecialty, tvSlots;
+        TextView tvName, tvCategory, tvSlots, tvPhone;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivDoctor = itemView.findViewById(R.id.ivDoctor);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvSpecialty = itemView.findViewById(R.id.tvSpecialty);
-            tvSlots = itemView.findViewById(R.id.tvSlots);
+            ivDoctor   = itemView.findViewById(R.id.ivDoctor);
+            tvName     = itemView.findViewById(R.id.tvName);
+            tvCategory = itemView.findViewById(R.id.tvCategory);
+            tvSlots    = itemView.findViewById(R.id.tvSlots);
+            tvPhone    = itemView.findViewById(R.id.tvPhone);
+        }
+    }
+
+    // ترجمة التصنيف للعربية
+    private String getCategoryArabic(String category) {
+        if (category == null) return "";
+        switch (category) {
+            case "General":      return "طب عام";
+            case "Dental":       return "أسنان";
+            case "Dermatology":  return "جلدية";
+            case "Pediatrics":   return "أطفال";
+            default:             return category;
         }
     }
 }

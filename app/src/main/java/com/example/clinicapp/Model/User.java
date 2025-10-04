@@ -1,62 +1,56 @@
 package com.example.clinicapp.Model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-    @Entity(tableName = "users")
-    public class User {
-        @PrimaryKey(autoGenerate = true)
-        public int id;
-        public String name;
-        public String email;
-        public String password;
-        public String phone;
+@Entity(tableName = "users")
+public class User {
+    @PrimaryKey(autoGenerate = true) public int id;
+    @NonNull
+    public String name;
+    @NonNull public String email;
+    @NonNull public String password;
 
-        public User(String name, String email, String password, String phone) {
-            this.name = name;
-            this.email = email;
-            this.password = password;
-            this.phone = phone;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public String getPhone() {
-            return phone;
-        }
-
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
+    public User(@NonNull String name, @NonNull String email, @NonNull String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @NonNull
+    public String getName() {
+        return name;
+    }
+
+    public void setName(@NonNull String name) {
+        this.name = name;
+    }
+
+    @NonNull
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@NonNull String email) {
+        this.email = email;
+    }
+
+    @NonNull
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@NonNull String password) {
+        this.password = password;
+    }
+}
 

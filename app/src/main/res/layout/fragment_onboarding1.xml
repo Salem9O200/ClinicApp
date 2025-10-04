@@ -5,12 +5,12 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="32dp"
-    android:background="@android:color/white">
+    android:background="@color/purple_500">
 
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:src="@drawable/doctor"
         android:contentDescription="صورة ترحيب" />
 
     <TextView
@@ -28,6 +28,6 @@
         android:text="احجز موعدك بسهولة وأمان"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
-        android:textColor="#666666" />
+        android:textColor="@color/white" />
 
 </LinearLayout>

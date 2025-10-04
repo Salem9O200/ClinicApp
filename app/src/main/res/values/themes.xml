@@ -6,4 +6,5 @@
     </style>
 
     <style name="Theme.ClinicApp" parent="Base.Theme.ClinicApp" />
+
 </resources>

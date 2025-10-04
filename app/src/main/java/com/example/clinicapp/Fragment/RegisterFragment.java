@@ -88,39 +88,33 @@ public class RegisterFragment extends Fragment {
         }
 
         // ✅ نفّذ كل شيء في خيط خلفي
+        // داخل register() في RegisterFragment
         new Thread(() -> {
             MyDataBase db = MyDataBase.getDatabase(requireContext());
 
-            // التحقق من البريد
             boolean emailExists = !db.userDao().getUserByEmail(email).isEmpty();
-
             if (emailExists) {
-                // العودة للخيط الرئيسي لعرض Toast
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "هذا البريد الإلكتروني مستخدم مسبقًا", Toast.LENGTH_SHORT).show();
-                });
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "هذا البريد الإلكتروني مستخدم مسبقًا", Toast.LENGTH_SHORT).show()
+                );
                 return;
             }
 
-            // إنشاء مستخدم جديد
-            User newUser = new User(name, email, password, phone);
-            db.userDao().insert(newUser);
+            User newUser = new User(name, email, password);
+            long newId = db.userDao().insert(newUser);   // <-- خُذ الـ id من Room
+            newUser.id = (int) newId;                    // <-- خزّنه في الكائن
 
-            // حفظ الجلسة والانتقال
             requireActivity().runOnUiThread(() -> {
                 requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                         .edit()
                         .putBoolean("isLoggedIn", true)
-                        .putInt("userId", newUser.id)
+                        .putInt("userId", newUser.id)    // <-- id الصحيح
                         .apply();
 
                 Toast.makeText(getContext(), "تم إنشاء الحساب بنجاح!", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(requireActivity(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                requireActivity().finish();
+                // انتقل لـ MainActivity...
             });
         }).start();
+
     }
 }
