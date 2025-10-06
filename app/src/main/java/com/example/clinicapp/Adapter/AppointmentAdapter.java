@@ -84,6 +84,10 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             tvStatus     = itemView.findViewById(R.id.tvStatus);
         }
     }
+    public AppointmentItem getItemAt(int position) {
+        if (position < 0 || position >= items.size()) return null;
+        return items.get(position);
+    }
 
     private static String toArabic(String c) {
         if (c == null) return "";

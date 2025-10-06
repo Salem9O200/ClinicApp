@@ -1,8 +1,13 @@
 package com.example.clinicapp.Fragment;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +19,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clinicapp.Adapter.RecordsAdapter;
 import com.example.clinicapp.Database.MyDataBase;
+import com.example.clinicapp.MainActivity; // عدّلها لو الوجهة مختلفة عند الضغط على الإشعار
 import com.example.clinicapp.Model.Doctor;
 import com.example.clinicapp.Model.MedicalRecord;
 import com.example.clinicapp.R;
@@ -38,6 +48,10 @@ public class RecordsFragment extends Fragment {
     private RecordsAdapter adapter;
     private int userId = -1;
 
+    // إعدادات الإشعارات
+    private static final String CHANNEL_ID = "reminder_channel";
+    private static final int REQ_POST_NOTI = 2101;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,6 +64,50 @@ public class RecordsFragment extends Fragment {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         binding.recyclerView.addItemDecoration(new Spaces(12));
+        binding.recyclerView.addItemDecoration(
+                new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        );
+
+        // Swipe-to-delete مع تأكيد + إشعار بعد الحذف
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override public boolean onMove(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh, @NonNull RecyclerView.ViewHolder tgt) {
+                return false;
+            }
+
+            @Override public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int pos = viewHolder.getBindingAdapterPosition();
+                RecordsAdapter.RecordItem item = adapter.getItemAt(pos); // تأكد أن الـ Adapter يحتوي هذه الدالة
+                if (item == null) { adapter.notifyItemChanged(pos); return; }
+
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("تأكيد الحذف")
+                        .setMessage("هل تريد حذف هذا السجل الطبي؟")
+                        .setNegativeButton("إلغاء", (d, w) -> {
+                            d.dismiss();
+                            adapter.notifyItemChanged(pos);
+                        })
+                        .setPositiveButton("حذف", (d, w) -> {
+                            Executors.newSingleThreadExecutor().execute(() -> {
+                                int rows = MyDataBase.getDatabase(requireContext())
+                                        .medicalRecordDao()
+                                        .deleteById(item.record.getId());
+
+                                requireActivity().runOnUiThread(() -> {
+                                    if (rows > 0) {
+                                        Toast.makeText(requireContext(), "تم حذف السجل", Toast.LENGTH_SHORT).show();
+                                        showNotification("تم الحذف", "تم حذف السجل الطبي بنجاح ❌");
+                                        // LiveData ستحدّث القائمة تلقائيًا
+                                    } else {
+                                        Toast.makeText(requireContext(), "فشل الحذف", Toast.LENGTH_SHORT).show();
+                                        adapter.notifyItemChanged(pos);
+                                    }
+                                });
+                            });
+                        })
+                        .show();
+            }
+        }).attachToRecyclerView(binding.recyclerView);
 
         if (binding.fabAdd != null) binding.fabAdd.setOnClickListener(v -> showAddDialog());
 
@@ -58,6 +116,9 @@ public class RecordsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        ensureNotificationChannel();
+        ensurePostNotificationsPermission();
+
         SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
         userId = prefs.getInt("userId", -1);
 
@@ -119,6 +180,7 @@ public class RecordsFragment extends Fragment {
             List<Doctor> doctors = db.doctorDao().getAllSync();
 
             if (doctors == null || doctors.isEmpty()) {
+                if (!isAdded()) return;
                 requireActivity().runOnUiThread(() ->
                         Toast.makeText(requireContext(), "لا يوجد أطباء مضافين بعد", Toast.LENGTH_SHORT).show()
                 );
@@ -128,6 +190,7 @@ public class RecordsFragment extends Fragment {
             List<String> names = new ArrayList<>();
             for (Doctor d : doctors) names.add(d.getName());
 
+            if (!isAdded()) return;
             requireActivity().runOnUiThread(() -> {
                 spDoctor.setAdapter(new ArrayAdapter<>(
                         requireContext(), android.R.layout.simple_spinner_dropdown_item, names
@@ -151,8 +214,9 @@ public class RecordsFragment extends Fragment {
                     Doctor sel = doctors.get(pos);
 
                     Executors.newSingleThreadExecutor().execute(() -> {
-                        // (اختياري) تأكيد صلاحية المستخدم
+                        // صلاحية المستخدم (اختياري)
                         if (db.userDao().getById(userId) == null) {
+                            if (!isAdded()) return;
                             requireActivity().runOnUiThread(() ->
                                     Toast.makeText(requireContext(), "الرجاء تسجيل الدخول مجددًا", Toast.LENGTH_LONG).show()
                             );
@@ -166,12 +230,67 @@ public class RecordsFragment extends Fragment {
                         rec.setNotes(notes);
                         db.medicalRecordDao().insert(rec);
 
-                        requireActivity().runOnUiThread(dialog::dismiss);
+                        if (!isAdded()) return;
+                        requireActivity().runOnUiThread(() -> {
+                            dialog.dismiss();
+                            // إشعار بعد الإضافة
+                            showNotification("تمت الإضافة", "تم حفظ السجل الطبي بنجاح ✅");
+                        });
                     });
                 });
             });
         });
     }
+
+    // ====== إشعارات ======
+
+    private void ensureNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Appointments/Records Notifications",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            channel.setDescription("Used for confirmations and deletions of records/appointments");
+            NotificationManager nm = requireContext().getSystemService(NotificationManager.class);
+            nm.createNotificationChannel(channel);
+        }
+    }
+
+    private void ensurePostNotificationsPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, REQ_POST_NOTI);
+            }
+        }
+    }
+
+    private void showNotification(String title, String message) {
+        Context ctx = requireContext();
+
+        Intent intent = new Intent(ctx, MainActivity.class); // غيّر الوجهة إذا أردت
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                ctx,
+                0,
+                intent,
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0
+        );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher) // استخدم أيقونة إشعار مناسبة لديك
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat.from(ctx)
+                .notify((int) System.currentTimeMillis(), builder.build());
+    }
+
+    // ====== أدوات مساعدة ======
 
     private void showEmpty(boolean empty) {
         if (binding == null) return;

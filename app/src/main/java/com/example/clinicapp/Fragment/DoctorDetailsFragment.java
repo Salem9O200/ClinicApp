@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,9 +29,9 @@ public class DoctorDetailsFragment extends Fragment {
 
     public static DoctorDetailsFragment newInstance(int doctorId) {
         DoctorDetailsFragment f = new DoctorDetailsFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_DOCTOR_ID, doctorId);
-        f.setArguments(b);
+        Bundle args = new Bundle();
+        args.putInt(ARG_DOCTOR_ID, doctorId);
+        f.setArguments(args);
         return f;
     }
 
@@ -41,66 +43,72 @@ public class DoctorDetailsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         doctorId = getArguments() != null ? getArguments().getInt(ARG_DOCTOR_ID, -1) : -1;
 
         if (doctorId == -1) {
-            requireActivity().onBackPressed();
+            binding.tvName.setText("لم يتم العثور على الطبيب");
             return;
         }
 
+        // تحميل بيانات الطبيب من قاعدة البيانات بالخلفية
         Executors.newSingleThreadExecutor().execute(() -> {
-            Doctor d = MyDataBase.getDatabase(requireContext()).doctorDao().getById(doctorId);
-            if (!isAdded()) return;
-            requireActivity().runOnUiThread(() -> bindDoctor(d));
+            Doctor doctor = MyDataBase.getDatabase(requireContext()).doctorDao().getById(doctorId);
+
+            if (doctor == null || !isAdded()) return;
+
+            requireActivity().runOnUiThread(() -> showDoctorDetails(doctor));
         });
     }
 
-    private void bindDoctor(Doctor d) {
-        if (d == null) {
-            requireActivity().onBackPressed();
-            return;
-        }
-        binding.tvName.setText(d.getName());
-        binding.tvCategory.setText(categoryArabic(d.getCategory()));
-        binding.tvSlots.setText(d.getSlotsCsv() == null ? "-" : d.getSlotsCsv());
-        binding.tvPhone.setText(d.getPhone() == null ? "-" : d.getPhone());
+    private void showDoctorDetails(Doctor doctor) {
+        binding.tvName.setText(doctor.getName());
+        binding.tvCategory.setText(getCategoryArabic(doctor.getCategory()));
+        binding.tvPhone.setText("📞 " + (doctor.getPhone() == null ? "-" : doctor.getPhone()));
+        binding.tvSlots.setText("🕐 المواعيد: " + (doctor.getSlotsCsv() == null ? "-" : doctor.getSlotsCsv()));
 
         int resId = 0;
-        if (d.getImageUrl() != null && !d.getImageUrl().trim().isEmpty()) {
-            resId = getResources().getIdentifier(d.getImageUrl(), "drawable", requireContext().getPackageName());
+        if (doctor.getImageUrl() != null && !doctor.getImageUrl().trim().isEmpty()) {
+            resId = getResources().getIdentifier(doctor.getImageUrl(), "drawable", requireContext().getPackageName());
         }
-        if (resId == 0) resId = R.drawable.doctor;
+        if (resId == 0) resId = R.drawable.ic_launcher_background;
 
-        Glide.with(this).load(resId).placeholder(R.drawable.doctor).into(binding.ivDoctor);
+        Glide.with(requireContext())
+                .load(resId)
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(binding.ivDoctor);
 
-        // الاتصال
         binding.btnCall.setOnClickListener(v -> {
-            String phone = d.getPhone();
-            if (phone != null && !phone.trim().isEmpty()) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+            if (doctor.getPhone() != null && !doctor.getPhone().trim().isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + doctor.getPhone()));
                 startActivity(intent);
             }
         });
 
-        // الموقع (ابحث بالاسم على الخرائط – عدّلها لإحداثيات لو بدك)
         binding.btnMap.setOnClickListener(v -> {
-            String query = Uri.encode(d.getName());
-            Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + query);
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-            mapIntent.setPackage("com.google.android.apps.maps"); // اختياري
+            // افتح Google Maps مع اسم الطبيب فقط (يمكنك استبداله بإحداثيات لاحقاً)
+            String query = Uri.encode(doctor.getName() + " عيادة");
+            Uri mapUri = Uri.parse("geo:0,0?q=" + query);
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);
         });
     }
 
-    private String categoryArabic(String c) {
-        if (c == null) return "";
-        switch (c) {
+    private String getCategoryArabic(String category) {
+        if (category == null) return "";
+        switch (category) {
             case "General": return "طب عام";
             case "Dental": return "أسنان";
             case "Dermatology": return "جلدية";
             case "Pediatrics": return "أطفال";
-            default: return c;
+            default: return category;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

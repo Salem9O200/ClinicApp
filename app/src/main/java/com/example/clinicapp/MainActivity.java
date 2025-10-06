@@ -1,5 +1,8 @@
 package com.example.clinicapp;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -9,15 +12,10 @@ import androidx.fragment.app.Fragment;
 import com.example.clinicapp.Database.MyDataBase;
 import com.example.clinicapp.Database.SeedData;
 import com.example.clinicapp.Fragment.AppointmentsFragment;
-import com.example.clinicapp.Fragment.DentalDoctorsFragment;
-import com.example.clinicapp.Fragment.DermatologyDoctorsFragment;
 import com.example.clinicapp.Fragment.DoctorsFragment;
-import com.example.clinicapp.Fragment.GeneralDoctorsFragment;
-import com.example.clinicapp.Fragment.PediatricsDoctorsFragment;
 import com.example.clinicapp.Fragment.ProfileFragment;
 import com.example.clinicapp.Fragment.RecordsFragment;
 import com.example.clinicapp.Model.Doctor;
-import com.example.clinicapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.concurrent.Executors;
@@ -55,7 +53,21 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNav.setSelectedItemId(R.id.nav_doctors);
 
-    }
+
+            // إنشاء القناة
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(
+                        "reminder_channel",
+                        "Appointments Notifications",
+                        NotificationManager.IMPORTANCE_DEFAULT
+                );
+                channel.setDescription("Used for showing appointment reminders");
+
+                NotificationManager manager = getSystemService(NotificationManager.class);
+                manager.createNotificationChannel(channel);
+            }
+        }
+
 
     private void insertSampleDoctorsOnce() {
         Executors.newSingleThreadExecutor().execute(() -> {

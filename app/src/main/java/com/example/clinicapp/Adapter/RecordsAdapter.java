@@ -19,6 +19,7 @@ import java.util.List;
 
 public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.VH> {
 
+    // عنصر واحد يجمع السجل والطبيب
     public static class RecordItem {
         public final MedicalRecord record;
         public final Doctor doctor;
@@ -37,7 +38,21 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.VH> {
         notifyDataSetChanged();
     }
 
-    @NonNull @Override
+    // 🟢 دالة إضافية للوصول إلى عنصر حسب الفهرس (للسحب للحذف)
+    public RecordItem getItemAt(int position) {
+        if (position < 0 || position >= items.size()) return null;
+        return items.get(position);
+    }
+
+    // 🟢 (اختياري) لحذف العنصر محليًا من القائمة دون انتظار LiveData
+    public void removeAt(int position) {
+        if (position < 0 || position >= items.size()) return;
+        items.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @NonNull
+    @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_record, parent, false);
