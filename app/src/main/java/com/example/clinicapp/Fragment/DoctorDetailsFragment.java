@@ -62,20 +62,41 @@ public class DoctorDetailsFragment extends Fragment {
 
     private void showDoctorDetails(Doctor doctor) {
         binding.tvName.setText(doctor.getName());
-        binding.tvCategory.setText(getCategoryArabic(doctor.getCategory()));
+        binding.chipCategory.setText(getCategoryArabic(doctor.getCategory()));
         binding.tvPhone.setText("📞 " + (doctor.getPhone() == null ? "-" : doctor.getPhone()));
         binding.tvSlots.setText("🕐 المواعيد: " + (doctor.getSlotsCsv() == null ? "-" : doctor.getSlotsCsv()));
 
         int resId = 0;
-        if (doctor.getImageUrl() != null && !doctor.getImageUrl().trim().isEmpty()) {
-            resId = getResources().getIdentifier(doctor.getImageUrl(), "drawable", requireContext().getPackageName());
+
+// لو Doctor عنده resource id مباشر (int)
+        int imgRes = doctor.getImageRes(); // لو يرجع 0 يعني مفيش صورة
+        if (imgRes != 0) {
+            resId = imgRes;
+        } else {
+            // (اختياري) لو عندك أيضاً دعم اسم صورة كنص
+            String url = String.valueOf(doctor.getImageRes()); // فقط إذا كان موجود في الكلاس
+            if (url != null && !url.trim().isEmpty()) {
+                if (url.startsWith("http")) {
+                    Glide.with(requireContext())
+                            .load(url)
+                            .placeholder(R.drawable.ic_launcher_background)
+                            .error(R.drawable.ic_launcher_background)
+                            .into(binding.ivDoctor);
+                    return;
+                } else {
+                    resId = getResources().getIdentifier(url, "drawable", requireContext().getPackageName());
+                }
+            }
         }
+
         if (resId == 0) resId = R.drawable.ic_launcher_background;
 
         Glide.with(requireContext())
                 .load(resId)
                 .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
                 .into(binding.ivDoctor);
+
 
         binding.btnCall.setOnClickListener(v -> {
             if (doctor.getPhone() != null && !doctor.getPhone().trim().isEmpty()) {
@@ -86,13 +107,19 @@ public class DoctorDetailsFragment extends Fragment {
         });
 
         binding.btnMap.setOnClickListener(v -> {
-            // افتح Google Maps مع اسم الطبيب فقط (يمكنك استبداله بإحداثيات لاحقاً)
             String query = Uri.encode(doctor.getName() + " عيادة");
             Uri mapUri = Uri.parse("geo:0,0?q=" + query);
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
-            startActivity(mapIntent);
+            // جرّب Google Maps أولاً، ولو مش موجود افتح أي تطبيق مناسب
+            try {
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            } catch (Exception e) {
+                mapIntent.setPackage(null);
+                startActivity(mapIntent);
+            }
         });
+
     }
 
     private String getCategoryArabic(String category) {

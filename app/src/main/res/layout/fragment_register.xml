@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:hint="الاسم الكامل">
+            android:hint="@string/full_name">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etName"
@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="البريد الإلكتروني">
+            android:hint="@string/email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="رقم الهاتف">
+            android:hint="@string/phoneNumber">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPhone"
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="كلمة المرور"
+            android:hint="@string/password"
             app:passwordToggleEnabled="true"
             xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="إنشاء حساب"
+            android:text="@string/create_account"
             android:textColor="@android:color/white"
             android:backgroundTint="#4CAF50" />
 

@@ -12,7 +12,7 @@ import com.example.clinicapp.Model.Doctor;
 import com.example.clinicapp.Model.MedicalRecord;
 import com.example.clinicapp.Model.User;
 
-@Database(entities = {User.class, Doctor.class, Appointment.class, MedicalRecord.class}, version = 4, exportSchema = false)
+@Database(entities = {User.class, Doctor.class, Appointment.class, MedicalRecord.class}, version = 5, exportSchema = false)
 public abstract class MyDataBase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract DoctorDao doctorDao();

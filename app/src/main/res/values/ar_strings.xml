@@ -1,2 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <string name="loading">جارِ التحميل...</string>
+    <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
+    <string name="delete">حذف</string>
+    <string name="edit">تعديل</string>
+
+    <string name="nav_doctors">الأطباء</string>
+    <string name="nav_appointments">المواعيد</string>
+    <string name="nav_records">السجلات</string>
+    <string name="nav_profile">الملف الشخصي</string>
+
+    <string name="login_title">تسجيل الدخول</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="login_button">تسجيل الدخول</string>
+    <string name="no_account">ليس لديك حساب؟</string>
+    <string name="register_here">أنشئ حساباً جديداً</string>
+
+    <string name="register_title">إنشاء حساب جديد</string>
+    <string name="full_name">الاسم الكامل</string>
+    <string name="phone_number">رقم الهاتف</string>
+    <string name="create_account">إنشاء حساب</string>
+    <string name="already_have_account">لديك حساب بالفعل؟</string>
+    <string name="login_here">سجّل الدخول هنا</string>
+
+    <string name="doctors_list">قائمة الأطباء</string>
+    <string name="doctor_name">اسم الطبيب</string>
+    <string name="specialty">التخصص</string>
+    <string name="phone">الهاتف</string>
+    <string name="working_hours">ساعات العمل</string>
+
+    <string name="appointments_list">مواعيدك</string>
+    <string name="no_appointments">لا توجد مواعيد بعد</string>
+    <string name="add_appointment">إضافة موعد</string>
+    <string name="appointment_time">وقت الموعد</string>
+    <string name="appointment_date">تاريخ الموعد</string>
+
+    <string name="records_list">سجلاتك الطبية</string>
+    <string name="record_title">عنوان السجل</string>
+    <string name="notes">ملاحظات</string>
+    <string name="add_record">إضافة سجل</string>
+    <string name="no_records" translatable="false">لا توجد سجلات طبية بعد</string>
+
+    <string name="profile">الملف الشخصي</string>
+    <string name="logout" translatable="false">تسجيل الخروج</string>
+    <string name="edit_profile" translatable="false">تعديل الملف</string>
+    <string name="language" translatable="false">اللغة</string>
+    <string name="change_language" translatable="false">تغيير اللغة</string>
+
+    <string name="drawer_logout" translatable="false">تسجيل الخروج</string>
+    <string name="drawer_change_lang" translatable="false">تغيير اللغة</string>
+
+    <string name="btn_next" translatable="false">التالي</string>
+    <string name="btn_previous" translatable="false">السابق</string>
+    <string name="btn_skip" translatable="false">تخطي</string>
+    <string name="btn_start_now" translatable="false">ابدأ الآن</string>
+
+    <string name="slide1_title" translatable="false">مرحباً بك في عيادتنا!</string>
+    <string name="slide1_subtitle" translatable="false">احجز موعدك بسهولة وأمان</string>
+
+    <string name="slide2_title" translatable="false">تصفح الأطباء حسب التخصص</string>
+    <string name="slide2_subtitle" translatable="false">اختر الطبيب الأنسب لحالتك</string>
+
+    <string name="slide3_title" translatable="false">تابع سجلك الطبي بسهولة</string>
+    <string name="slide3_subtitle" translatable="false">جميع زياراتك وتشخيصاتك في مكان واحد</string>
+
+</resources>

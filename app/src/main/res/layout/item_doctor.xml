@@ -1,72 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    card_view:cardCornerRadius="12dp"
-    card_view:cardElevation="4dp">
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="18dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="?attr/colorOutlineVariant">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:padding="12dp"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <!-- صورة الدكتور -->
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivDoctor"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="12dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_doctor_general"
-            android:background="@drawable/round_bg"
-            android:contentDescription="@string/app_name" />
+            app:shapeAppearanceOverlay="@style/Shape.Circle"
+            />
 
-        <!-- تفاصيل الدكتور -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
 
             <TextView
                 android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="اسم الدكتور"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:text="@string/dr_name"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:id="@+id/tvCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="التخصص"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:text="@string/specialty"
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginTop="2dp" />
 
             <TextView
                 android:id="@+id/tvSlots"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="المواعيد: 09:00, 10:00"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"
+                android:text="@string/time"
+                android:textSize="13sp"
                 android:layout_marginTop="4dp" />
 
             <TextView
                 android:id="@+id/tvPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📞 123456789"
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="14sp"
+                android:text="@string/phone"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
                 android:layout_marginTop="4dp" />
-
         </LinearLayout>
+
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

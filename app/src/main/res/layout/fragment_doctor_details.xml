@@ -6,82 +6,129 @@
     android:padding="16dp">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/ivDoctor"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/doctor"/>
-
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_marginTop="12dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="Doctor Name"
-            android:textColor="@android:color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tvCategory"
-            android:layout_marginTop="4dp"
-            android:text="التخصص"
-            android:textSize="14sp"
-            android:textColor="#666"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tvPhone"
-            android:layout_marginTop="12dp"
-            android:text="—"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tvSlots"
-            android:layout_marginTop="12dp"
-            android:text="المواعيد: —"
-            android:textSize="14sp"
+        <!-- بطاقة الهيدر -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:cardUseCompatPadding="true"
+            app:cardCornerRadius="20dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorOutlineVariant"
+            android:padding="16dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivDoctor"
+                    android:layout_width="84dp"
+                    android:layout_height="84dp"
+                    android:src="@drawable/doctor"
+                    android:scaleType="centerCrop"
+                    app:shapeAppearanceOverlay="@style/Shape.Circle"
+                    android:contentDescription="@string/app_name" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginStart="16dp">
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dr_name"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <!-- Chip بدون أيقونة مفقودة -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipCategory"
+                        style="@style/Widget.MaterialComponents.Chip.Action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/specialty"
+                        android:layout_marginTop="6dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- معلومات -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorOutlineVariant">
+
+            <LinearLayout
+                android:padding="16dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/number"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvSlots"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/appointment"
+                    android:layout_marginTop="8dp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- أزرار الإجراءات -->
         <LinearLayout
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:gravity="center"
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
+            <!-- Filled (MaterialComponents) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCall"
                 style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"                android:layout_weight="1"
-                android:text="اتصال"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/call"
                 app:icon="@drawable/ic_call_24"
-                app:iconGravity="textStart"/>
+                app:iconPadding="8dp"
+                android:backgroundTint="#2196F3"
+                app:iconGravity="textStart" />
 
             <Space
                 android:layout_width="12dp"
-                android:layout_height="0dp"/>
+                android:layout_height="0dp" />
 
+            <!-- Outlined (MaterialComponents) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMap"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="الموقع"
+                android:text="@string/map"
                 app:icon="@drawable/ic_map_24"
-                app:iconGravity="textStart"/>
+                app:iconPadding="8dp"
+                app:iconGravity="textStart" />
         </LinearLayout>
 
     </LinearLayout>

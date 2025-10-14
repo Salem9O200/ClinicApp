@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:hint="البريد الإلكتروني">
+        android:hint="@string/email">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="كلمة المرور"
+        android:hint="@string/password"
         app:passwordToggleEnabled="true"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="تسجيل الدخول"
+        android:text="@string/login"
         android:textColor="@android:color/white"
         android:backgroundTint="#2196F3" />
 

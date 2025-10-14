@@ -8,10 +8,7 @@ import com.example.clinicapp.Fragment.DoctorsByCategoryFragment;
 
 public class DoctorsPagerAdapter extends FragmentStateAdapter {
 
-    // القيم يجب أن تطابق تماما ما في قاعدة البيانات (Doctor.category)
-    private static final String[] CATEGORIES = new String[] {
-            "General", "Dental", "Dermatology", "Pediatrics"
-    };
+    private static final String[] CATEGORIES = {"General", "Dental", "Dermatology", "Pediatrics"};
 
     public DoctorsPagerAdapter(@NonNull Fragment host) {
         super(host);
@@ -20,8 +17,7 @@ public class DoctorsPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        String category = CATEGORIES[position];
-        return DoctorsByCategoryFragment.newInstance(category);
+        return DoctorsByCategoryFragment.newInstance(CATEGORIES[position]);
     }
 
     @Override
@@ -29,13 +25,14 @@ public class DoctorsPagerAdapter extends FragmentStateAdapter {
         return CATEGORIES.length;
     }
 
-    public static String getTabTitle(int position) {
+    // ⬇️ هذه الدالة هنا (وليس في DoctorAdapter)
+    public static String tabTitle(int position) {
         switch (position) {
             case 0: return "عام";
             case 1: return "أسنان";
             case 2: return "جلدية";
             case 3: return "أطفال";
-            default: return "أخرى";
+            default: return "";
         }
     }
 }

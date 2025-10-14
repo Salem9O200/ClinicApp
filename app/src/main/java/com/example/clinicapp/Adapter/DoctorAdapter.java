@@ -54,7 +54,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
         holder.tvPhone.setText("📞 " + (d.getPhone() == null ? "-" : d.getPhone()));
 
         // تحميل صورة من drawable بالاسم (بدون الامتداد)
-        String drawableName = d.getImageUrl();
+        String drawableName = String.valueOf(d.getImageRes());
         int resId = 0;
         if (drawableName != null && !drawableName.trim().isEmpty()) {
             resId = holder.itemView.getResources().getIdentifier(
@@ -72,6 +72,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
             if (listener != null) listener.onDoctorClick(d);
         });
     }
+
 
     @Override
     public int getItemCount() {

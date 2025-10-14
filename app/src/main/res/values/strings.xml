@@ -1,5 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ClinicApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name" translatable="false">ClinicApp</string>
+    <string name="name" translatable="false">Name</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="record" translatable="false">Record</string>
+    <string name="doctor" translatable="false">Doctor</string>
+    <string name="time" translatable="false">Time</string>
+    <string name="notes" translatable="false">Notes</string>
+    <string name="dr_name" translatable="false">Doctor Name</string>
+    <string name="specialty" translatable="false">Specialty</string>
+    <string name="phone" translatable="false">Phone</string>
+    <string name="pending" translatable="false">Pending</string>
+    <string name="appointment_sample_time" translatable="false">Appointment: 01/10/2025 09:00</string>
+    <string name="full_name" translatable="false">Full Name</string>
+    <string name="phoneNumber" translatable="false">Phone Number</string>
+    <string name="password" translatable="false">Password</string>
+    <string name="create_account" translatable="false">Create Account</string>
+    <string name="login" translatable="false">Login</string>
+    <string name="profile" translatable="false">Profile</string>
+    <string name="upDate" translatable="false">Update</string>
+    <string name="number" translatable="false">📞 —</string>
+    <string name="appointment" translatable="false">🕐 Appointments: —</string>
+    <string name="call" translatable="false">Call</string>
+    <string name="map" translatable="false">Map</string>
+    <string name="no_appointments" translatable="false">No appointments yet</string>
+    <string name="tip_add_new_appointment" translatable="false">Start by adding a new appointment</string>
+    <string name="welcome_message_title" translatable="false">Track your medical record easily</string>
+    <string name="welcome_message_subtitle" translatable="false">All your visits and diagnoses in one place</string>
+    <string name="browse_doctors_title" translatable="false">Browse doctors by specialty</string>
+    <string name="browse_doctors_subtitle" translatable="false">Choose the doctor that best suits your case</string>
+    <string name="welcome_title" translatable="false">Welcome to our clinic!</string>
+    <string name="welcome_subtitle" translatable="false">Book your appointment easily and safely</string>
+    <string name="cd_welcome_image" translatable="false">Welcome image</string>
+    <string name="choose_doctor" translatable="false">Choose a doctor</string>
+    <string name="choose_time" translatable="false">Choose a time</string>
+    <string name="record_title_required" translatable="false">Record title (required)</string>
+    <string name="notes_hint" translatable="false">Notes</string>
+    <string name="optional_password" translatable="false">Password (optional)</string>
+    <string name="regester" translatable="false">سجّل الدخول أو أنشئ حساباً جديداً</string>
 </resources>

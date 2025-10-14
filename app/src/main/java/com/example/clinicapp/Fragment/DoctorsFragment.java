@@ -30,7 +30,7 @@ public class DoctorsFragment extends Fragment {
         binding.viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager,
-                (tab, position) -> tab.setText(DoctorsPagerAdapter.getTabTitle(position))
+                (tab, position) -> tab.setText(DoctorsPagerAdapter.tabTitle(position))
         ).attach();
     }
 

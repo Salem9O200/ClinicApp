@@ -19,7 +19,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/ic_launcher_background"
-            android:contentDescription="Doctor"
+            android:contentDescription="@string/doctor"
         android:scaleType="centerCrop"
         android:background="@drawable/round_bg"
         android:padding="8dp"/>
@@ -35,7 +35,7 @@
                 android:id="@+id/tvDoctorName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="اسم الدكتور"
+                android:text="@string/dr_name"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@android:color/black" />
@@ -44,7 +44,7 @@
                 android:id="@+id/tvSpecialty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="التخصص"
+                android:text="@string/specialty"
                 android:textSize="14sp"
                 android:textColor="@android:color/darker_gray" />
 
@@ -52,7 +52,7 @@
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="الموعد: 01/10/2025 09:00"
+                android:text="@string/appointment_sample_time"
                 android:textSize="14sp"
                 android:textColor="@android:color/black" />
 
@@ -60,7 +60,7 @@
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="الحالة: Pending"
+                android:text="@string/pending"
                 android:textSize="14sp"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold"/>

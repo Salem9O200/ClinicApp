@@ -37,7 +37,7 @@
                     android:alpha="0.9"/>
 
                 <TextView
-                    android:text="لا توجد سجلات طبية بعد"
+                    android:text="@string/no_records"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:layout_marginTop="12dp"
@@ -52,10 +52,10 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
-        android:contentDescription="إضافة سجل"
+        android:contentDescription="@string/record"
         app:srcCompat="@drawable/ic_add"
         app:tint="@android:color/white"
-        app:backgroundTint="?attr/colorPrimary"
+        app:backgroundTint="#2196F3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchorGravity="bottom|end"

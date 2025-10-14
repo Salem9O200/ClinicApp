@@ -49,7 +49,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="لا توجد مواعيد بعد"
+                    android:text="@string/no_appointments"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:layout_marginTop="16dp"
@@ -75,7 +75,7 @@
         android:contentDescription="إضافة موعد"
         app:srcCompat="@drawable/ic_add"
         app:tint="@android:color/white"
-        app:backgroundTint="?attr/colorPrimary"
+        app:backgroundTint="#2196F3"
         app:layout_anchorGravity="bottom|end"
         app:layout_anchor="@id/swipe"
         android:layout_margin="16dp"/>

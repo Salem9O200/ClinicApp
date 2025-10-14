@@ -5,18 +5,19 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="32dp"
-    android:background="@android:color/white">
+    android:background="#2196F3"
+>
 
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="صورة ترحيب" />
+        android:src="@drawable/doctor"
+       />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="تابع سجلك الطبي بسهولة"
+        android:text="@string/welcome_message_title"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_marginTop="24dp"
@@ -25,9 +26,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="جميع زياراتك وتشخيصاتك في مكان واحد"
+        android:text="@string/welcome_message_subtitle"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
-        android:textColor="#666666" />
+        android:textColor="@color/white" />
 
 </LinearLayout>

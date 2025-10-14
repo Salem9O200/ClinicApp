@@ -27,7 +27,7 @@ public interface DoctorDao {
     Doctor getFirstDoctor();
 
     @Query("SELECT * FROM doctors WHERE category = :category")
-    androidx.lifecycle.LiveData<List<Doctor>> getByCategory(String category);
+    LiveData<List<Doctor>> getByCategory(String category);
 
     // 🔽 جديد:
     @Query("SELECT id FROM doctors WHERE name = :name LIMIT 1")
@@ -35,6 +35,7 @@ public interface DoctorDao {
 
     @Query("SELECT * FROM doctors WHERE category = :category")
     List<Doctor> getByCategorySync(String category);
+
 
     @Query("SELECT COUNT(*) FROM doctors")
     int count();

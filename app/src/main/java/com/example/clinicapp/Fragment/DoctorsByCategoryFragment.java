@@ -39,13 +39,21 @@ public class DoctorsByCategoryFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        String category = getArguments() != null ? getArguments().getString(ARG_CATEGORY) : "General";
+        // خذ الفئة من الـ arguments (افتراضي: General)
+        final String category;
+        if (getArguments() != null && getArguments().getString(ARG_CATEGORY) != null) {
+            category = getArguments().getString(ARG_CATEGORY);
+        } else {
+            category = "General";
+        }
+
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+        binding.recyclerView.addItemDecoration(
+                new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        );
 
         adapter = new DoctorAdapter(doctor -> {
-            // افتح شاشة التفاصيل
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .setReorderingAllowed(true)
@@ -55,14 +63,14 @@ public class DoctorsByCategoryFragment extends Fragment {
         });
         binding.recyclerView.setAdapter(adapter);
 
-        // راقب أطباء هذه الفئة من Room
+        // 📌 هنا كان الخطأ: لا تضع "Dental" ثابتة، استخدم المتغيّر category
         MyDataBase.getDatabase(requireContext())
-                .doctorDao().getByCategory("Dental")
+                .doctorDao()
+                .getByCategory(category)
                 .observe(getViewLifecycleOwner(), list -> {
-                    android.util.Log.d("Doctors", "count=" + (list==null?0:list.size()));
+                    android.util.Log.d("Doctors", "category=" + category + ", count=" + (list == null ? 0 : list.size()));
                     adapter.setDoctors(list);
                 });
-
     }
 
     @Override
