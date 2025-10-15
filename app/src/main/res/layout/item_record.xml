@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/tvDoctor"
-            android:text="@string/doctor"
+            android:text="@string/dr_name"
             android:textSize="14sp"
             android:layout_marginTop="4dp"
             android:textColor="?attr/colorOnSurfaceVariant"

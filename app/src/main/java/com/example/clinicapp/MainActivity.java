@@ -4,7 +4,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -14,8 +13,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.clinicapp.Database.SeedData;
 import com.example.clinicapp.Fragment.AppointmentsFragment;
@@ -27,27 +29,32 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.Locale;
-
 public class MainActivity extends AppCompatActivity {
+
+    private static final String PREFS = "app_prefs";
+    private static final String KEY_APP_LOCALE = "app_locale";
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        applySavedLocale(); // طبّق اللغة المختارة قبل setContentView
+        // 1) طبّق اللغة المحفوظة قبل رسم أي واجهة
+        String savedLang = getSavedLanguage("ar");
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(savedLang));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // بيانات تجريبية مرة واحدة
+        // 2) بيانات تجريبية
         SeedData.prepopulate(getApplicationContext());
 
-        // قناة الإشعارات
+        // 3) قناة إشعارات
         ensureNotificationChannel();
 
-        // Toolbar + Drawer
-        drawerLayout = findViewById(R.id.drawerLayout);
+        // 4) Toolbar + Drawer
+        drawerLayout   = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,21 +66,21 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // (اختياري) تعبئة هيدر باسم/إيميل
+        // 5) تعبئة هيدر الـDrawer
         View header = navigationView.getHeaderView(0);
         if (header != null) {
-            TextView tvName = header.findViewById(R.id.tvUserName);
+            TextView tvName  = header.findViewById(R.id.tvUserName);
             TextView tvEmail = header.findViewById(R.id.tvUserEmail);
-            SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
-            if (tvName != null)  tvName.setText(prefs.getString("userName", "User"));
+            SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+            if (tvName  != null) tvName.setText(prefs.getString("userName",  "User"));
             if (tvEmail != null) tvEmail.setText(prefs.getString("userEmail", "user@example.com"));
         }
 
-        // الاستماع لعناصر الـ Drawer
+        // 6) الاستماع لعناصر الـDrawer
         navigationView.setNavigationItemSelectedListener(this::onDrawerItemSelected);
 
-        // BottomNavigation
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        // 7) BottomNavigation
+        bottomNav = findViewById(R.id.bottomNav);
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment f;
             int id = item.getItemId();
@@ -93,34 +100,15 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
             return true;
         });
-        // شاشة البداية
+
+        // 8) شاشة البداية
         bottomNav.setSelectedItemId(R.id.nav_doctors);
     }
 
-    /** الاستماع لعناصر الـ Drawer */
+    /** عناصر الـ Drawer */
     private boolean onDrawerItemSelected(MenuItem item) {
         drawerLayout.closeDrawers();
         int id = item.getItemId();
-
-        // لو بدك تنقّل من الـDrawer كمان، فعّل هذي (وتأكد تضيف العناصر في drawer_menu.xml):
-        /*
-        if (id == R.id.nav_doctors) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new DoctorsFragment())
-                    .commit();
-            return true;
-        } else if (id == R.id.nav_appointments) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new AppointmentsFragment())
-                    .commit();
-            return true;
-        } else if (id == R.id.nav_records) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new RecordsFragment())
-                    .commit();
-            return true;
-        }
-        */
 
         if (id == R.id.nav_change_language) {
             showLanguageDialog();
@@ -130,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
             doLogout();
             return true;
         }
-
         return false;
     }
 
@@ -155,40 +142,45 @@ public class MainActivity extends AppCompatActivity {
         final String[] codes = {"ar", "en"};
 
         new MaterialAlertDialogBuilder(this)
-                .setTitle("اختر اللغة")
-                .setItems(langs, (d, which) -> {
-                    String code = codes[which];
-                    saveLocale(code);
-                    applyLocale(code);
-                    recreate(); // إعادة تحميل النشاط لتطبيق اللغة
-                })
-                .setNegativeButton("إلغاء", null)
+                .setTitle(getString(R.string.change_language))
+                .setItems(langs, (d, which) -> changeLanguage(codes[which]))
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
-    private void saveLocale(String code) {
-        getSharedPreferences("app_prefs", MODE_PRIVATE)
-                .edit().putString("app_locale", code).apply();
+    private void changeLanguage(String langTag) {
+        // خزّن اللغة
+        saveLanguage(langTag);
+
+        // طبّق اللغة على مستوى التطبيق
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langTag));
+
+        // فضي الـBackStack للFragments حتى ما تبقى نسخ قديمة بالنصوص
+        FragmentManager fm = getSupportFragmentManager();
+        for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
+            fm.popBackStackImmediate();
+        }
+
+        // أعد تهيئة النشاط بالكامل لتتحدّث كل الواجهات
+        recreate();
     }
 
-    private void applySavedLocale() {
-        String code = getSharedPreferences("app_prefs", MODE_PRIVATE)
-                .getString("app_locale", null);
-        if (code != null) applyLocale(code);
+    private void saveLanguage(String code) {
+        getSharedPreferences(PREFS, MODE_PRIVATE)
+                .edit()
+                .putString(KEY_APP_LOCALE, code)
+                .apply();
     }
 
-    private void applyLocale(String code) {
-        Locale locale = new Locale(code);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration(getResources().getConfiguration());
-        config.setLocale(locale);
-        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+    private String getSavedLanguage(String def) {
+        return getSharedPreferences(PREFS, MODE_PRIVATE)
+                .getString(KEY_APP_LOCALE, def);
     }
 
     /* ---------- تسجيل الخروج ---------- */
 
     private void doLogout() {
-        getSharedPreferences("app_prefs", MODE_PRIVATE).edit().clear().apply();
+        getSharedPreferences(PREFS, MODE_PRIVATE).edit().clear().apply();
         startActivity(new Intent(this, AuthActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }

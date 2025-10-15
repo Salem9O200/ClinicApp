@@ -19,7 +19,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/ic_launcher_background"
-            android:contentDescription="@string/doctor"
         android:scaleType="centerCrop"
         android:background="@drawable/round_bg"
         android:padding="8dp"/>
@@ -52,7 +51,7 @@
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/appointment_sample_time"
+                android:text="@string/appointment_time_ar"
                 android:textSize="14sp"
                 android:textColor="@android:color/black" />
 

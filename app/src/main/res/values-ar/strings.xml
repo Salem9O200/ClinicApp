@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تطبيق العيادة</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="full_name">الاسم الكامل</string>
+    <string name="create_account">إنشاء حساب</string>
+    <string name="specialty">التخصص</string>
+    <string name="phone">رقم الهاتف</string>
+    <string name="no_appointments">لا توجد مواعيد بعد</string>
+    <string name="notes">ملاحظات</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name ="general">عام</string>
+    <string name ="dental">اسنان</string>
+    <string name ="dermatology">جلدية</string>
+    <string name ="pediatrics">اطفال</string>
+    <string name ="doctors">الأطباء</string>
+    <string name ="appointments">المواعيد</string>
+    <string name ="records">السجلات</string>
+
+    <!-- أمثلة أخرى مستخدمة -->
+    <string name="change_language">تغيير اللغة</string>
+    <string name="cancel">إلغاء</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="upDate">تحديث</string>
+    <string name="dr_name">اسم الطبيب</string>
+    <string name="time">الوقت</string>
+    <string name="record">السجل</string>
+    <string name="welcome_message_title">تابع سجلك الطبي بسهولة</string>
+    <string name="welcome_message_subtitle">كل زياراتك وتشخيصاتك في مكان واحد</string>
+    <string name="browse_doctors_title">تصفح الأطباء حسب التخصص</string>
+    <string name="browse_doctors_subtitle">اختر الطبيب الأنسب لحالتك</string>
+    <string name="welcome_title">مرحباً بك في عيادتنا!</string>
+    <string name="welcome_subtitle">احجز موعدك بسهولة وأمان</string>
+    <string name="map">الخريطة</string>
+    <string name="call">اتصال</string>
+    <string name="number">📞 —</string>
+    <string name="appointment">🕐 المواعيد: —</string>
+    <string name="name">الاسم</string>
+    <string name="slide1_title">تصفح الأطباء حسب التخصص</string>
+    <string name="btn_start_now">ابدأ الآن</string>
+    <string name="regester">تسجيل</string>
+
+    <!-- الحوارات -->
+    <string name="choose_doctor">اختر الطبيب</string>
+    <string name="choose_time">اختر الوقت</string>
+
+    <!-- البروفايل -->
+    <string name="edit_profile">تعديل الملف الشخصي</string>
+    <string name="logout">تسجيل الخروج</string>
+
+    <!-- السجلات -->
+    <string name="no_records">لا توجد سجلات طبية بعد</string>
+
+    <!-- نموذج التسجيل -->
+    <string name="phoneNumber">رقم الهاتف</string>
+
+    <!-- عناصر قائمة المواعيد -->
+    <string name="doctor">الطبيب</string>
+    <string name="appointment_time_ar">الموعد: 01/10/2025 09:00</string>
+    <string name="pending">قيد الانتظار</string>
+    <string name="navigation_drawer_open">فتح القائمة الجانبية</string>
+    <string name="navigation_drawer_close">اغلاق القائمة الجانبية</string>
+</resources>
